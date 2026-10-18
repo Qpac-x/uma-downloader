@@ -44,12 +44,17 @@ jobs:
           name: uma-downloader-windows
           path: dist/
 
+      - name: Package release zip
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: Compress-Archive -Path dist/* -DestinationPath uma-downloader-windows.zip
+
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
-          files: |
-            dist/uma-downloader.exe
-            dist/sqlite3mc_x64.dll
-            dist/uma_index_meta.py
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Recreate the release so a re-tagged version replaces stale assets.
+          gh release delete "$GITHUB_REF_NAME" --yes --cleanup-tag=false || true
+          gh release create "$GITHUB_REF_NAME" uma-downloader-windows.zip --generate-notes
