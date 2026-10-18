@@ -292,6 +292,13 @@ indexed.
 - Rust crates: `eframe`/`egui`, `tokio`, `reqwest`, `lz4_flex`, `sha1`,
   `clap`, `indicatif`, `futures`, `libloading`, `data-encoding`.
 
+## License
+
+Original code in this repository is released under the **MIT License** — see
+[LICENSE](LICENSE). Third-party components and their required notices are
+listed in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) (notably the
+MIT-licensed `sqlite3mc_x64.dll`).
+
 ## Disclaimer
 
 Unofficial personal-use tool. Not affiliated with or endorsed by Cygames.
