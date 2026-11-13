@@ -28,6 +28,15 @@ local `meta` database so the game accepts them without fetching them again.
 
 ---
 
+## Download
+
+Grab the prebuilt Windows binary from
+**[Releases → latest](https://github.com/Qpac-x/uma-downloader/releases/latest)**
+(`uma-downloader-windows.zip`). Unzip anywhere — it contains the executable,
+the `sqlite3mc_x64.dll` driver and the optional Python indexer. **No Rust
+installation is needed.** Rust is only required to
+[build from source](#building).
+
 ## Why this exists
 
 The game's own "download all data" is serial, fragile and often restarts
@@ -119,7 +128,8 @@ rollback journal (`meta-journal`) is present.
 - **Windows** 10/11 (the code targets Windows paths and processes; the game is
   Windows/Steam here).
 - **Umamusume: Pretty Derby (Global, Steam)** installed.
-- **Rust** (stable toolchain) to build.
+- **Rust** (stable toolchain) only to build from source — the
+  [prebuilt release](#download) needs no toolchain.
 - Write access to the game directory — run elevated or point `--dat-dir`
   elsewhere (the game won't see files outside its own directory, but the CLI
   can still be used).
