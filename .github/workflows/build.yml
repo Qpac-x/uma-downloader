@@ -30,10 +30,12 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
+          # DLL/PY come from the repo, not target/release: on a rust-cache hit
+          # cargo treats build.rs as fresh and skips re-copying them there.
           Copy-Item -Path @(
             "target/release/uma-downloader.exe",
-            "target/release/sqlite3mc_x64.dll",
-            "target/release/uma_index_meta.py",
+            "vendor/sqlite3mc_x64.dll",
+            "uma_index_meta.py",
             "README.md",
             "LICENSE"
           ) -Destination dist/
