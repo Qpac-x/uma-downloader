@@ -43,7 +43,7 @@ struct Cli {
     #[arg(long)]
     list: bool,
 
-    /// Show totals without downloading.
+    /// Show what would be downloaded (checks files already on disk) without downloading.
     #[arg(long)]
     dry_run: bool,
 
@@ -182,10 +182,6 @@ async fn run_cli(args: Cli) -> Result<()> {
         .sum();
     eprintln!("{selected} assets to sync ({})", fmt_bytes(total_bytes));
 
-    if args.dry_run {
-        return Ok(());
-    }
-
     // SHA1 hashing and metadata syscalls for up to ~191k assets would otherwise
     // stall the async runtime.
     let dat_dir = args.dat_dir.clone();
@@ -193,13 +189,21 @@ async fn run_cli(args: Cli) -> Result<()> {
         plan_tasks(&assets, &dat_dir, |a| wanted.is_empty() || wanted.contains(&a.category))
     })
     .await?;
-    eprintln!("{skipped} already complete, {} to download", todo.len());
+    let todo_bytes: u64 = todo.iter().map(|t| t.size).sum();
+    eprintln!(
+        "{skipped} already complete, {} to download ({})",
+        todo.len(),
+        fmt_bytes(todo_bytes)
+    );
+
+    if args.dry_run {
+        return Ok(());
+    }
     if todo.is_empty() {
         return Ok(());
     }
 
     let total_files = todo.len();
-    let todo_bytes: u64 = todo.iter().map(|t| t.size).sum();
 
     let mp = MultiProgress::new();
     let main = mp.add(ProgressBar::new(todo_bytes));
